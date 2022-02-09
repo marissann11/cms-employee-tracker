@@ -28,17 +28,19 @@ const choices = async () => {
     case "View All Employees":
       return viewEmployees();
     case "Add A Department":
-      return promptDeptAdd();
+      return addDept();
     case "Add A Role":
       return addRole();
-    case "Add An Employee":
-      return promptEmpAdd();
+    // case "Add An Employee":
+    //   return addEmployee();
     case "Update Employee's Role":
       return updateEmployee();
     case "Exit":
       return;
   }
 };
+
+// view table functions
 
 const viewDepts = async () => {
   const [departments] = await db.viewAllDepartments();
@@ -61,27 +63,20 @@ const viewEmployees = async () => {
   choices();
 };
 
-const promptDeptAdd = async () => {
-  let res = await inquirer.prompt([
+// add to table functions
+
+const addDept = async () => {
+  const dept = await inquirer.prompt([
     {
       type: "input",
       name: "name",
-      message: "What is the name of the Department you would like to add?",
-    },
+      message: "What is the name of the Department you would like to add?"
+    }
   ]);
-  addDept(res.name);
-};
-
-
-const addDept = (name) => {
-  const sql = `insert into departments (department_name) values (?)`;
-  const params = `${name}`;
-
-  db.query(sql, params, (err, res) => {
-    if (err) console.error(err);
-    viewDepts();
-  });
-};
+  await db.addDept(dept);
+  console.log(`Added ${dept.name} to Departments`);
+  choices();
+}
 
 const addRole = async () => {
   const [departments] = await db.viewAllDepartments();
@@ -114,6 +109,6 @@ const addRole = async () => {
   choices();
 };
 
-// NEED:  FUNCTION to update (UPDATE) employee role (SET - which column to modify) and (WHERE)
+
 
 choices();
