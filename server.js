@@ -31,8 +31,8 @@ const choices = async () => {
       return addDept();
     case "Add A Role":
       return addRole();
-    // case "Add An Employee":
-    //   return addEmployee();
+    case "Add An Employee":
+      return addEmployee();
     case "Update Employee's Role":
       return updateEmployee();
     case "Exit":
@@ -109,6 +109,10 @@ const addRole = async () => {
   choices();
 };
 
+// NEED ADD EMPLOYEE FUNCTION
+
+
+// NEED UPDATE ROLE FUNCTION
 
 
 choices();

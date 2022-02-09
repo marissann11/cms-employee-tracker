@@ -13,11 +13,11 @@ values
 ('Intern', 33000, 3),
 ('Shoeshiner', 50, 2);
 
-insert into employees (first_name, last_name, role_id, manager_id)
+insert into employees (first_name, last_name, role_title, department_name, role_salary, manager_name)
 values
-('Ron', 'Swanson', 1, null),
-('Leslie', 'Knope', 2, 1),
-('Ben', 'Wyatt', 4, null),
-('Gary', 'Gergich', 3, 2),
-('April', 'Ludgate', 5, 2),
-('Andy', 'Dwyer', 6, 2);
+('Ron', 'Swanson', 'Director', 'Parks and Recreation', 100000, null),
+('Leslie', 'Knope', 'Deputy Director', 'Parks and Recreation', 80000, 'Ron'),
+('Ben', 'Wyatt', 'Auditor', 'State', 50000, null),
+('Gary', 'Gergich', 'Administrator', 'Parks and Recreation', 60000, 'Leslie'),
+('April', 'Ludgate', 'Intern', 'Parks and Recreation', 33000, 'Leslie'),
+('Andy', 'Dwyer', 'Shoeshiner', 'City Hall', 50, null);
