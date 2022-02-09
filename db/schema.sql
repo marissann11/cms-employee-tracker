@@ -2,13 +2,9 @@ drop database if exists employee;
 create database employee;
 use employee;
 
-drop table if exists departments;
-drop table if exists roles;
-drop table if exists employees;
-
 create table departments (
     id integer auto_increment primary key,
-    department_name varchar(30) not null
+    name varchar(30) not null
 );
 
 create table roles (
