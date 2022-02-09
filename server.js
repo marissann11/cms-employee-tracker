@@ -87,7 +87,7 @@ const promptDeptAdd = async () => {
       message: "What is the name of the Department you would like to add?",
     },
   ]);
-  choices();
+  addDept(res.name);
 };
 const promptRoleAdd = async () => {
   let res = await inquirer.prompt([
@@ -107,7 +107,7 @@ const promptRoleAdd = async () => {
       message: "In what department does this role belong?",
     },
   ]);
-  choices();
+  addRole(res.title, res.salary, res.department);
 };
 const promptEmpAdd = async () => {
   let res = await inquirer.prompt([
@@ -122,9 +122,10 @@ const promptEmpAdd = async () => {
       message: "What is the last name of the employee?",
     },
     {
+        // Better way to do this?
       type: "input",
       name: "role",
-      message: "What is the title of this employee's role?",
+      message: "What is the ID of this employee's role?",
     },
     {
       type: "confirm",
@@ -133,16 +134,55 @@ const promptEmpAdd = async () => {
       default: true,
     },
     {
+        // Better way to do this?
       type: "input",
       name: "manager",
-      message: "Who is this employee's manager?",
+      message: "What is the ID of this employee's manager?",
       when: ({ confirmManager }) => confirmManager,
     },
   ]);
-  choices();
+  if (!res.manager) {
+    addEmployee(res.first, res.last, res.role, null);
+  } else {
+    addEmployee(res.first, res.last, res.role, res.manager);
+  }
 };
 
 // NEED:  FUNCTION(S) to ADD (INSERT INTO) to departments, roles, or employees
+
+const addDept = (name) => {
+  const sql = `insert into departments (department_name) values (?)`;
+  const params = `${name}`;
+
+  db.query(sql, params, (err, res) => {
+    if (err) console.error(err);
+    viewDepts();
+  });
+};
+const addRole = (title, salary, department) => {
+  const roleInfo = { title, salary, department };
+  const roleArr = Object.values(roleInfo);
+
+  const sql = `insert into roles (title, salary, dept_id) values (?,?,?)`;
+  const params = roleArr;
+
+  db.query(sql, params, (err, res) => {
+    if (err) console.error(err);
+    viewRoles();
+  });
+};
+const addEmployee = (first, last, role, manager) => {
+  const empInfo = { first, last, role, manager };
+  const empArr = Object.values(empInfo);
+
+  const sql = `insert into employees (first_name, last_name, role_id, manager_id) values (?,?,?,?)`;
+  const params = empArr;
+
+  db.query(sql, params, (err, res) => {
+    if (err) console.error(err);
+    viewEmployees();
+  });
+};
 
 // NEED:  INQUIRER prompt (with CTABLE) to display as a LIST choices of employee's first and last names to choose who to UPDATE
 
