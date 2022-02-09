@@ -24,7 +24,6 @@ create table employees (
     first_name varchar(30) not null,
     last_name varchar(30) not null,
     role_id integer,
+    manager_id integer,
     constraint fk_role foreign key (role_id) references roles(id) on delete set null
 );
-
--- add manager id after role id in employee table
