@@ -34,7 +34,7 @@ const choices = async () => {
     case "Add An Employee":
       return addEmployee();
     case "Update Employee's Role":
-      return updateEmployee();
+      return updateRole();
     case "Exit":
       return;
   }
@@ -85,7 +85,7 @@ const addRole = async () => {
     name: name,
     value: id,
   }));
-  console.log(deptChoices);
+  
   const role = await inquirer.prompt([
     {
       type: "input",
@@ -110,19 +110,18 @@ const addRole = async () => {
 };
 
 const addEmployee = async () => {
-
   const [roles] = await db.viewAllRoles();
   const roleChoices = roles.map(({ title, id }) => ({
     name: title,
     value: id,
   }));
-console.log(roleChoices);
+  
   const [employees] = await db.viewAllEmployees();
-  const managerChoices = employees.map(({ first_name, id }) => ({
-    name: first_name,
+  const managerChoices = employees.map(({ first_name, last_name, id }) => ({
+    name: first_name + ' ' + last_name,
     value: id,
   }));
-console.log(managerChoices);
+  
   const employee = await inquirer.prompt([
     {
       type: "input",
@@ -148,10 +147,47 @@ console.log(managerChoices);
     },
   ]);
   await db.addEmployee(employee);
-  console.log(`Added ${employee.first_name} ${employee.last_name} to Employees`);
+  console.log(
+    `Added ${employee.first_name} ${employee.last_name} to Employees`
+  );
   choices();
 };
 
+// UPDATE employee role function
 
+const updateRole = async () => {
+  
+  const [employees] = await db.viewAllEmployees();
+  const employeeChoices = employees.map(({ first_name, last_name, id }) => ({
+    name: first_name + ' ' + last_name,
+    value: id,
+  }));
+
+  const [roles] = await db.viewAllRoles();
+  const roleChoices = roles.map(({ title, id }) => ({
+    name: title,
+    value: id,
+  }));
+
+  const update = await inquirer.prompt([
+    {
+      type: "list",
+      name: "id",
+      message: "Who is the Employee whose role you would like to update?",
+      choices: employeeChoices,
+    },
+    {
+      type: "list",
+      name: "role_id",
+      message: "What will be their updated job title?",
+      choices: roleChoices,
+    }
+  ]);
+  await db.updateRole(update.role_id, update.id);
+  console.log(
+    `Employee Updated!`
+  );
+  choices();
+}
 
 choices();

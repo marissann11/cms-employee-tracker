@@ -77,14 +77,13 @@ class DB {
       employee
     );
   }
-  // NEED ADD EMPLOYEE METHOD
   updateRole(roleId, employeeId) {
     return this.connection.promise().query(
       `
         update
             employees
         set
-            roles_id = ?
+            role_id = ?
         where
             id = ?
         `,
