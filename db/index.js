@@ -33,11 +33,15 @@ class DB {
             employees.first_name,
             employees.last_name,
             employees.manager_id,
-            roles.id as role
+            roles.title as title,
+            roles.salary as salary,
+            departments.name as department
         from
             employees
         left join
             roles on employees.role_id = roles.id
+        left join
+            departments on roles.dept_id = departments.id
         `);
   }
   addDept(dept) {
