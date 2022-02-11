@@ -66,6 +66,17 @@ class DB {
       role
     );
   }
+  addEmployee(employee) {
+    return this.connection.promise().query(
+      `
+        insert into
+            employees
+        set
+            ?
+        `,
+      employee
+    );
+  }
   // NEED ADD EMPLOYEE METHOD
   updateRole(roleId, employeeId) {
     return this.connection.promise().query(

@@ -109,27 +109,20 @@ const addRole = async () => {
   choices();
 };
 
-// NEED ADD EMPLOYEE FUNCTION
-
 const addEmployee = async () => {
-  const [departments] = await db.viewAllDepartments();
-  const deptChoices = departments.map(({ id, name }) => ({
-    name: name,
-    value: id,
-  }));
 
   const [roles] = await db.viewAllRoles();
-  const roleChoices = roles.map(({ name, id }) => ({
-    name: name,
+  const roleChoices = roles.map(({ title, id }) => ({
+    name: title,
     value: id,
   }));
-
+console.log(roleChoices);
   const [employees] = await db.viewAllEmployees();
-  const managerChoices = roles.map(({ name, id }) => ({
-    name: name,
+  const managerChoices = employees.map(({ first_name, id }) => ({
+    name: first_name,
     value: id,
   }));
-
+console.log(managerChoices);
   const employee = await inquirer.prompt([
     {
       type: "input",
@@ -139,29 +132,26 @@ const addEmployee = async () => {
     {
       type: "input",
       name: "last_name",
-      message: "What is the first name of the Employee?",
+      message: "What is the last name of the Employee?",
     },
     {
       type: "list",
-      name: "department",
-      message: "What department does this employee belong to?",
-      choices: deptChoices,
+      name: "manager_id",
+      message: "Who is this Employee's manager?",
+      choices: managerChoices,
     },
     {
       type: "list",
-      name: "role",
+      name: "role_id",
       message: "What is this Employee's job title?",
       choices: roleChoices,
     },
-    {
-      type: "list",
-      name: "manager",
-      message: "Who is this Employee's manager?",
-      choices: managerChoices,
-    }
   ]);
+  await db.addEmployee(employee);
+  console.log(`Added ${employee.first_name} ${employee.last_name} to Employees`);
+  choices();
 };
 
-// NEED UPDATE ROLE FUNCTION
+
 
 choices();
