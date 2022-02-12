@@ -90,6 +90,39 @@ class DB {
       [roleId, employeeId]
     );
   }
+  deleteDept(dept) {
+    return this.connection.promise().query(
+      `
+        delete from
+            departments
+        where
+            id = ?
+        `,
+      dept
+    );
+  }
+  deleteRole(role) {
+    return this.connection.promise().query(
+      `
+        delete from
+            roles
+        where
+            id = ?
+        `,
+      role
+    );
+  }
+  deleteEmployee(employee) {
+    return this.connection.promise().query(
+      `
+        delete from
+            employees
+        where
+            id = ?
+        `,
+      employee
+    );
+  }
 }
 
 module.exports = new DB(connection);

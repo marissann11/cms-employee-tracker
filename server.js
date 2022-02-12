@@ -1,6 +1,6 @@
 const db = require("./db");
 const inquirer = require("inquirer");
-const cTable = require("console.table");
+const process = require("process");
 
 const choices = async () => {
   let res = await inquirer.prompt([
@@ -16,6 +16,9 @@ const choices = async () => {
         "Add A Role",
         "Add An Employee",
         "Update Employee's Role",
+        "Delete A Department",
+        "Delete A Role",
+        "Delete An Employee",
         "Exit",
       ],
     },
@@ -35,8 +38,14 @@ const choices = async () => {
       return addEmployee();
     case "Update Employee's Role":
       return updateRole();
+    case "Delete A Department":
+      return deleteDept();
+    case "Delete A Role":
+      return deleteRole();
+    case "Delete An Employee":
+      return deleteEmployee();
     case "Exit":
-      return;
+      return process.exit();
   }
 };
 
@@ -85,7 +94,7 @@ const addRole = async () => {
     name: name,
     value: id,
   }));
-  
+
   const role = await inquirer.prompt([
     {
       type: "input",
@@ -115,13 +124,13 @@ const addEmployee = async () => {
     name: title,
     value: id,
   }));
-  
+
   const [employees] = await db.viewAllEmployees();
   const managerChoices = employees.map(({ first_name, last_name, id }) => ({
-    name: first_name + ' ' + last_name,
+    name: first_name + " " + last_name,
     value: id,
   }));
-  
+
   const employee = await inquirer.prompt([
     {
       type: "input",
@@ -156,10 +165,9 @@ const addEmployee = async () => {
 // UPDATE employee role function
 
 const updateRole = async () => {
-  
   const [employees] = await db.viewAllEmployees();
   const employeeChoices = employees.map(({ first_name, last_name, id }) => ({
-    name: first_name + ' ' + last_name,
+    name: first_name + " " + last_name,
     value: id,
   }));
 
@@ -181,13 +189,74 @@ const updateRole = async () => {
       name: "role_id",
       message: "What will be their updated job title?",
       choices: roleChoices,
-    }
+    },
   ]);
   await db.updateRole(update.role_id, update.id);
-  console.log(
-    `Employee Updated!`
-  );
+  console.log(`Employee Updated!`);
   choices();
-}
+};
+
+const deleteDept = async () => {
+  const [departments] = await db.viewAllDepartments();
+
+  const deptChoices = departments.map(({ id, name }) => ({
+    name: name,
+    value: id,
+  }));
+
+  const dept = await inquirer.prompt([
+    {
+      type: "list",
+      name: "id",
+      message: "Please select which department you would like to delete",
+      choices: deptChoices,
+    },
+  ]);
+  await db.deleteDept(dept.id);
+  console.log(`Department Deleted!`);
+  choices();
+};
+
+const deleteRole = async () => {
+  const [roles] = await db.viewAllRoles();
+
+  const roleChoices = roles.map(({ title, id }) => ({
+    name: title,
+    value: id,
+  }));
+
+  const role = await inquirer.prompt([
+    {
+      type: "list",
+      name: "role_id",
+      message: "Please select which role you would like to delete",
+      choices: roleChoices,
+    },
+  ]);
+  await db.deleteRole(role.role_id);
+  console.log(`Role Deleted!`);
+  choices();
+};
+
+const deleteEmployee = async () => {
+  const [employees] = await db.viewAllEmployees();
+
+  const employeeChoices = employees.map(({ first_name, last_name, id }) => ({
+    name: first_name + " " + last_name,
+    value: id,
+  }));
+
+  const employee = await inquirer.prompt([
+    {
+      type: "list",
+      name: "id",
+      message: "Please select which role you would like to delete",
+      choices: employeeChoices,
+    },
+  ]);
+  await db.deleteEmployee(employee.id);
+  console.log(`Employee Deleted!`);
+  choices();
+};
 
 choices();

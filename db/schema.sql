@@ -11,7 +11,7 @@ create table roles (
     id integer auto_increment primary key,
     title varchar(30) not null,
     salary decimal(10,2),
-    dept_id integer
+    dept_id integer,
     foreign key (dept_id) references departments(id) on delete set null
 );
 
