@@ -2,6 +2,8 @@ const db = require("./db");
 const inquirer = require("inquirer");
 const process = require("process");
 
+const sleep = (ms = 1000) => new Promise((r) => setTimeout(r, ms));
+
 const choices = async () => {
   let res = await inquirer.prompt([
     {
@@ -19,6 +21,7 @@ const choices = async () => {
         "Delete A Department",
         "Delete A Role",
         "Delete An Employee",
+        "View Total Utilized Budgets",
         "Exit",
       ],
     },
@@ -44,6 +47,8 @@ const choices = async () => {
       return deleteRole();
     case "Delete An Employee":
       return deleteEmployee();
+    case "View Total Utilized Budgets":
+      return viewBudgets();
     case "Exit":
       return process.exit();
   }
@@ -53,22 +58,28 @@ const choices = async () => {
 
 const viewDepts = async () => {
   const [departments] = await db.viewAllDepartments();
-  console.log(`/n`);
+  console.log(`\n`);
   console.table(departments);
+  console.log(`\n`);
+  await sleep();
   choices();
 };
 
 const viewRoles = async () => {
   const [roles] = await db.viewAllRoles();
-  console.log(`/n`);
+  console.log(`\n`);
   console.table(roles);
+  console.log(`\n`);
+  await sleep();
   choices();
 };
 
 const viewEmployees = async () => {
   const [employees] = await db.viewAllEmployees();
-  console.log(`/n`);
+  console.log(`\n`);
   console.table(employees);
+  console.log(`\n`);
+  await sleep();
   choices();
 };
 
@@ -196,6 +207,8 @@ const updateRole = async () => {
   choices();
 };
 
+// DELETE functions
+
 const deleteDept = async () => {
   const [departments] = await db.viewAllDepartments();
 
@@ -250,7 +263,7 @@ const deleteEmployee = async () => {
     {
       type: "list",
       name: "id",
-      message: "Please select which role you would like to delete",
+      message: "Please select which Employee you would like to delete",
       choices: employeeChoices,
     },
   ]);
@@ -258,5 +271,14 @@ const deleteEmployee = async () => {
   console.log(`Employee Deleted!`);
   choices();
 };
+
+const viewBudgets = async () => {
+  const [budgets] = await db.viewBudgets();
+  console.log(`\n`);
+  console.table(budgets);
+  console.log(`\n`);
+  await sleep();
+  choices();
+}
 
 choices();

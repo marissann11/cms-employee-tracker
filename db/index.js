@@ -123,6 +123,23 @@ class DB {
       employee
     );
   }
+  viewBudgets() {
+    return this.connection.promise().query(
+      `
+        select
+            departments.name,
+            sum(roles.salary) as Budget
+        from
+            employees
+        left join
+            roles on employees.role_id = roles.id
+        left join
+            departments on roles.dept_id = departments.id
+        group by
+            departments.name;
+      `
+    );
+  }
 }
 
 module.exports = new DB(connection);
