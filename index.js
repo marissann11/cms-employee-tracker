@@ -2,6 +2,7 @@ const db = require("./db");
 const inquirer = require("inquirer");
 const process = require("process");
 
+// Allows for a break between viewing the information and getting prompted with the menu again 
 const sleep = (ms = 1000) => new Promise((r) => setTimeout(r, ms));
 
 const choices = async () => {
@@ -50,11 +51,10 @@ const choices = async () => {
     case "View Total Utilized Budgets":
       return viewBudgets();
     case "Exit":
+      // Prompts exit of application without having to do it manually
       return process.exit();
   }
 };
-
-// view table functions
 
 const viewDepts = async () => {
   const [departments] = await db.viewAllDepartments();
@@ -83,8 +83,6 @@ const viewEmployees = async () => {
   choices();
 };
 
-// add to table functions
-
 const addDept = async () => {
   const dept = await inquirer.prompt([
     {
@@ -101,6 +99,7 @@ const addDept = async () => {
 const addRole = async () => {
   const [departments] = await db.viewAllDepartments();
 
+  // This allows the "name" to show up as a choice, but the value passed through is the id belonging to that name
   const deptChoices = departments.map(({ id, name }) => ({
     name: name,
     value: id,
@@ -173,8 +172,6 @@ const addEmployee = async () => {
   choices();
 };
 
-// UPDATE employee role function
-
 const updateRole = async () => {
   const [employees] = await db.viewAllEmployees();
   const employeeChoices = employees.map(({ first_name, last_name, id }) => ({
@@ -206,8 +203,6 @@ const updateRole = async () => {
   console.log(`Employee Updated!`);
   choices();
 };
-
-// DELETE functions
 
 const deleteDept = async () => {
   const [departments] = await db.viewAllDepartments();
