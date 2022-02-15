@@ -1,6 +1,7 @@
 const db = require("./db");
 const inquirer = require("inquirer");
 const process = require("process");
+const cTable = require("console.table");
 
 // Allows for a break between viewing the information and getting prompted with the menu again 
 const sleep = (ms = 1000) => new Promise((r) => setTimeout(r, ms));

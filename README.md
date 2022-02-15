@@ -29,3 +29,4 @@ The employee tracker can be initialized by running the command `node index.js`. 
 * View Total Utilized Budgets by Department
 
 ## Walkthrough / Demo
+https://watch.screencastify.com/v/hGOFQIincuyM7LYMy2uo
